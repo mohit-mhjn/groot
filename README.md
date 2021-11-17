@@ -55,3 +55,10 @@
     INCORRECT istatus!
     ```
 
+  - Do I need to do anything with the test_scripts - No
+  - Do I need to make any changes in run_test.py - No, you only modify project.py
+  - How do I find all the execution options - `python3 run_tests.py --help`
+
+### Known Issues - 
+1. Jupyter-notebook support
+2. Debug mode and pretty printing - under way
