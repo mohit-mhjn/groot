@@ -1,70 +1,7 @@
-def simplex_method(A, b, c, irule):
-    """
-    Find a basic optimal solution for the linear program
-
-        min:    c*x
-        ST:     Ax=b
-                x>=0,
-
-    where A is an (m,n) matrix.
-
-    Input Parameters:
-
-    A - (n,m) constraint matrix
-    b - (m,1) POSITIVE vector appearing in the constraint equation above
-    c - (1,n) vector giving the coefficients of the objective function
-
-    irule - integer parameter specifying which pivot rule to use:
-        irule = 0 indicates that the smallest coefficient rule should be used
-        irule = 1 indicates that Bland's rule should be used
-
-    Output Parameters:
-
-    istatus - integer parameter reporting the condition of the
-       istatus = 0  indicates normal completeion (i.e., a solution has been found and reported)
-       istatus = 4  indicates the program is infeasible
-       istatus = 16 indicates the program is feasible but our initialization procedure has failed
-       istatus = 32 indicates that the program is unbounded
-
-    X  - vector of length n specifying the solution
-    eta - the minimum value of the objective function
-    iB - integer vector specifying the m indices of the basic variables after the simplex step
-    iN - integer vector specifying the n-m indices of the nonbasic variables after the simplex step
-    xB - vector of length m specifying the values of the basic variables after the simplex step
-    """
-    return
+from test_scripts.simplex_test import protect_step, protect_init, protect_method
 
 
-def simplex_init(A, b, c):
-    """
-    Attempt to find a basic feasible vector for the linear program
-
-    max:    c*x
-    ST:     Ax=b
-            x>=0,
-
-    where A is a (m,n) matrix.
-
-    Input Parameters:
-
-    A - (n,m) constraint matrix
-    b - (m,1) vector appearing in the constraint equation above
-    c - (1,n) vector giving the coefficients of the objective function
-
-    Output Parameters:
-
-    istatus - integer parameter reporting the condition of the
-       istatus = 0  indicates a basic feasible vector was found
-       istatus = 4  indicates that the initialization procedure failed
-       istatus = 16  indicates that the problem is infeasible
-
-    iB - integer vector of length m specifying the indices of the basic variables
-    iN - integer vector of length n-m specifying the indices of the nonbasic variables
-    xB - vector of length m specifying the values of the basic variables
-    """
-    pass
-
-
+@protect_step
 def simplex_step(A, b, c, iB, iN, xB, irule):
     """
     Take a single simplex method step for the linear program
@@ -103,4 +40,93 @@ def simplex_step(A, b, c, iB, iN, xB, irule):
     iN - integer vector specifying the n-m indices of the nonbasic variables after the simplex step
     xB - vector of length m specifying the values of the basic variables after the simplex step
     """
-    return [A, b, c, iB, iN, xB, irule]
+    istatus = None
+
+    # @@ Write program here to update values for [istatus, iB, iN, xB] >>
+
+    return [istatus, iB, iN, xB]
+
+
+@protect_init
+def simplex_init(A, b, c):
+    """
+    Attempt to find a basic feasible vector for the linear program
+
+    max:    c*x
+    ST:     Ax=b
+            x>=0,
+
+    where A is a (m,n) matrix.
+
+    Input Parameters:
+
+    A - (n,m) constraint matrix
+    b - (m,1) vector appearing in the constraint equation above
+    c - (1,n) vector giving the coefficients of the objective function
+
+    Output Parameters:
+
+    istatus - integer parameter reporting the condition of the
+       istatus = 0  indicates a basic feasible vector was found
+       istatus = 4  indicates that the initialization procedure failed
+       istatus = 16  indicates that the problem is infeasible
+
+    iB - integer vector of length m specifying the indices of the basic variables
+    iN - integer vector of length n-m specifying the indices of the nonbasic variables
+    xB - vector of length m specifying the values of the basic variables
+    """
+    istatus = None
+    iB = None
+    iN = None
+    xB = None
+
+    # @@ Write program here to assign appropriate values to [istatus, iB, iN, xB] >>>
+
+    return [istatus, iB, iN, xB]
+
+
+@protect_method
+def simplex_method(A, b, c, irule):
+    """
+    Find a basic optimal solution for the linear program
+
+        min:    c*x
+        ST:     Ax=b
+                x>=0,
+
+    where A is an (m,n) matrix.
+
+    Input Parameters:
+
+    A - (n,m) constraint matrix
+    b - (m,1) POSITIVE vector appearing in the constraint equation above
+    c - (1,n) vector giving the coefficients of the objective function
+
+    irule - integer parameter specifying which pivot rule to use
+        - irule = 0 indicates that the smallest coefficient rule should be used
+        - irule = 1 indicates that Bland's rule should be used
+
+    Output Parameters:
+
+    istatus - integer parameter reporting the condition of the
+        - istatus = 0  indicates normal completion (i.e., a solution has been found and reported)
+        - istatus = 4  indicates the program is infeasible
+        - istatus = 16 indicates the program is feasible but our initialization procedure has failed
+        - istatus = 32 indicates that the program is unbounded
+
+    X  - vector of length n specifying the solution
+    eta - the minimum value of the objective function
+    iB - integer vector specifying the m indices of the basic variables after the simplex step
+    iN - integer vector specifying the n-m indices of the nonbasic variables after the simplex step
+    xB - vector of length m specifying the values of the basic variables after the simplex step
+    """
+    istatus = None
+    X = None
+    eta = None
+    iB = None
+    iN = None
+    xB = None
+
+    # @@ Write program here to assign appropriate values to [istatus, X, eta, iB, iN, xB] >>>
+
+    return [istatus, X, eta, iB, iN, xB]

@@ -91,13 +91,47 @@ def simplex_test(A, b, c, iB, xB):
     return [X, eta, isfeasible, isoptimal, zN]
 
 
-def validate_step(func):
+def protect_step(func):
     @wraps(func)
     def argument_validator(*args, **kwargs):
         # simplex_step(A,b,c,iB,iN,xB,irule)
         # assert isinstance(A, np.matrix)
+        [istatus, iB, iN, xB] = func(*args, **kwargs)
+        assert isinstance(istatus, int), "return: istatus must be int type"
+        assert isinstance(iB, list), "return: iB must be list type"
+        assert isinstance(iN, list), "return: iN must be list type"
+        assert isinstance(xB, np.matrix), "return: xB must be np.matrix type"
+        return [istatus, iB, iN, xB]
 
-        return func(*args, **kwargs)
+    return argument_validator
+
+
+def protect_init(func):
+    @wraps(func)
+    def argument_validator(*args, **kwargs):
+        # simplex_step(A,b,c,iB,iN,xB,irule)
+        # assert isinstance(A, np.matrix)
+        [istatus, iB, iN, xB] = func(*args, **kwargs)
+        assert isinstance(istatus, int), "return: istatus must be int type"
+        assert isinstance(iB, list), "return: iB must be list type"
+        assert isinstance(iN, list), "return: iN must be list type"
+        assert isinstance(xB, np.matrix), "return: xB must be np.matrix type"
+        return [istatus, iB, iN, xB]
+
+    return argument_validator
+
+
+def protect_method(func):
+    @wraps(func)
+    def argument_validator(*args, **kwargs):
+        # simplex_step(A,b,c,iB,iN,xB,irule)
+        # assert isinstance(A, np.matrix)
+        [istatus, X, eta, iB, iN, xB] = func(*args, **kwargs)
+        assert isinstance(istatus, int), "return: istatus must be int type"
+        assert isinstance(iB, list), "return: iB must be list type"
+        assert isinstance(iN, list), "return: iN must be list type"
+        assert isinstance(xB, np.matrix), "return: xB must be np.matrix type"
+        return [istatus, X, eta, iB, iN, xB]
 
     return argument_validator
 
