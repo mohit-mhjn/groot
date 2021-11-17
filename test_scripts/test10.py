@@ -5,7 +5,7 @@ __author__ = "Siqi Miao"
 __contributor__ = "Mohit M."
 
 import numpy as np
-from simplex_test import simplex_test
+from .simplex_test import simplex_test
 
 eps = 1.0e-10
 

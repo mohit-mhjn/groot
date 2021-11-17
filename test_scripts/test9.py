@@ -6,7 +6,7 @@ __contributor__ = "Mohit M."
 
 import numpy as np
 import random
-from simplex_test import simplex_test
+from .simplex_test import simplex_test
 
 eps = 1.0e-10
 
