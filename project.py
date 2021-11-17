@@ -40,7 +40,7 @@ def simplex_step(A, b, c, iB, iN, xB, irule):
     iN - integer vector specifying the n-m indices of the nonbasic variables after the simplex step
     xB - vector of length m specifying the values of the basic variables after the simplex step
     """
-    istatus = None
+    istatus = 0
 
     # @@ Write program here to update values for [istatus, iB, iN, xB] >>
 
