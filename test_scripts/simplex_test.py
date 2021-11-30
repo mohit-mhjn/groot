@@ -96,12 +96,13 @@ def protect_step(func):
     def argument_validator(*args, **kwargs):
         # simplex_step(A,b,c,iB,iN,xB,irule)
         # assert isinstance(A, np.matrix)
-        [istatus, iB, iN, xB] = func(*args, **kwargs)
+        [istatus, iB, iN, xB, Binv] = func(*args, **kwargs)
         assert isinstance(istatus, int), "return: istatus must be int type"
         assert isinstance(iB, list), "return: iB must be list type"
         assert isinstance(iN, list), "return: iN must be list type"
-        assert isinstance(xB, np.matrix), "return: xB must be np.matrix type"
-        return [istatus, iB, iN, xB]
+        # assert isinstance(xB, np.matrix), "return: xB must be np.matrix type"
+        # assert isinstance(Binv, np.matrix), "return: xB must be np.matrix type"
+        return [istatus, iB, iN, xB, Binv]
 
     return argument_validator
 

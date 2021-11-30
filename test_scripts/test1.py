@@ -5,7 +5,7 @@ __author__ = "Siqi Miao"
 __contributor__ = "Mohit M."
 
 import numpy as np
-from numpy.linalg import norm
+from numpy.linalg import norm, inv
 
 
 def run(func):
@@ -32,6 +32,7 @@ def run(func):
                     [1, 1, -1],
                     [1, 1, 0]], dtype=np.float64)
 
+    Binv = np.eye(3)
     A = np.hstack((np.eye(3), A1))
 
     b = np.matrix([[1],
@@ -45,7 +46,7 @@ def run(func):
 
     # test a step in this extremely simple state
     irule = 0
-    [istatus, iB, iN, xB] = func(A, b, c, iB, iN, xB, irule)
+    [istatus, iB, iN, xB, Binv] = func(A, b, c, iB, iN, xB, Binv, irule)
 
     X = np.zeros((6, 1), dtype=np.float64)
     X[[(b - 1) for b in iB]] = xB
