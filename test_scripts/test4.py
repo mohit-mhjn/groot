@@ -5,7 +5,7 @@ __author__ = "Siqi Miao"
 __contributor__ = "Mohit M."
 
 import numpy as np
-from numpy.linalg import norm
+from numpy.linalg import norm, inv
 
 
 def run(func):
@@ -52,11 +52,12 @@ def run(func):
     # modify c
     N = A[:, [index_N - 1 for index_N in iN]]
     c1 = np.matrix([[1, 1, 1]], dtype=np.float64)
-    c2 = c1 * B.I * N + c[:, [index_N - 1 for index_N in iN]];
+    c2 = c1 * B.I * N + c[:, [index_N - 1 for index_N in iN]]
+    Binv = inv(A[:, [i - 1 for i in iB]])
 
     # take a step with Bland's rule
     irule = 1
-    [istatus, iB, iN, xB] = func(A, b, c, iB, iN, xB, irule=1)
+    [istatus, iB, iN, xB, Binv] = func(A, b, c, iB, iN, xB, Binv, irule=1)
 
     X = np.zeros((6, 1), dtype=np.float64)
     X[[(b - 1) for b in iB]] = xB
