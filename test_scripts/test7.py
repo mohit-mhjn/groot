@@ -5,7 +5,6 @@ __author__ = "Siqi Miao"
 __contributor__ = "Mohit M."
 
 import numpy as np
-from numpy.random import randn
 import random
 from numpy.linalg import norm, cond
 

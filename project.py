@@ -1,5 +1,6 @@
 from test_scripts.simplex_test import protect_step, protect_init, protect_method
 import numpy as np
+from numpy.linalg import inv
 
 
 @protect_step
@@ -113,9 +114,9 @@ def simplex_step(A, b, c, iB, iN, xB, Binv, irule):
     for row in range(Binv_concat_y.shape[0]):
         if not row == leaving_var_position:
             for col in range(Binv_concat_y.shape[1]):
-                updated_B_inv_concat_y[row, col] = \
-                    Binv_concat_y[row, col] - (Binv_concat_y[row, -1] / Binv_concat_y[
-                        leaving_var_position, -1]) * updated_B_inv_concat_y[leaving_var_position, col]
+                updated_B_inv_concat_y[row, col] = Binv_concat_y[row, col] - (
+                        Binv_concat_y[row, -1] / updated_B_inv_concat_y[
+                    leaving_var_position, -1]) * updated_B_inv_concat_y[leaving_var_position, col]
 
     Binv = np.delete(updated_B_inv_concat_y, -1, axis=1)
     istatus = 0
@@ -123,7 +124,7 @@ def simplex_step(A, b, c, iB, iN, xB, Binv, irule):
 
 
 @protect_init
-def simplex_init(A, b, c):
+def simplex_init(A, b, c, irule=1):
     """
     Attempt to find a basic feasible vector for the linear program
 
@@ -156,8 +157,61 @@ def simplex_init(A, b, c):
     xB = None
 
     # @@ Write program here to assign appropriate values to [istatus, iB, iN, xB] >>>
+    rows = A.shape[0]
+    columns = A.shape[1]
 
-    return [istatus, iB, iN, xB]
+    # Check if any of the b's were negative >>
+    # If that happens, then multiply the constraint by -1
+    for i in range(rows):
+        if b[i, 0] < 0:
+            for j in range(columns):
+                A[i, j] *= -1
+            b[i, 0] *= -1
+
+    # PREPARE ARTIFICIAL VARIABLES >>
+    artificial_vars_matrix = np.eye(rows)
+    artificalA = np.hstack([A, artificial_vars_matrix])
+
+    # c = np.hstack((c, len(A[:,0])))
+    # cost vector for big_M row >>
+    costM = np.matrix([[0 for _ in range(columns)] + [1 for _ in range(rows)]], dtype=float)
+
+    # Row Operations to make all artificial variables basic for initialization
+    # for i in range(rows):
+    #     costM -= artificalA[i, :]
+
+    iB = [columns + i + 1 for i in range(rows)]
+    iN = [i + 1 for i in range(columns)]
+    iA = list(iB)  # artificial variable indices
+
+    # initializing B-inverse and xB
+    Binv = np.eye(rows)
+    xB = b
+    istatus = 4
+    termination_istatus = set([-1, 16])
+    max_iterations = 99  # >>> 300 times of number of columns
+    counter = 0
+
+    # iterating to optimality
+    while (istatus not in termination_istatus and counter < max_iterations):
+        # calling simplex_step for variable values after one iteration
+        [istatus, iB, iN, xB, Binv] = simplex_step(artificalA, b, costM, iB, iN, xB, Binv, irule=irule)
+        counter += 1
+
+    if counter >= max_iterations or istatus == 16:
+        # function terminates here with unknown occurrence
+        return [4, iB, iN, xB]
+
+    artifical_vars_in_basis = set(iA).intersection(set(iB))
+
+    # Test Level 1:
+    if not artifical_vars_in_basis:
+        iN = [i for i in iN if i not in set(iA)]
+        return [0, iB, iN, xB]
+    else:
+        for some_var in artifical_vars_in_basis:
+            if xB[iB.index(some_var), 0] != 0:
+                return [16, iB, iN, xB]
 
 
 @protect_method
@@ -197,12 +251,42 @@ def simplex_method(A, b, c, irule):
     """
     istatus = None
     X = None
-    eta = None
+    eta = 0
     iB = None
     iN = None
     xB = None
 
     # @@ Write program here to assign appropriate values to [istatus, X, eta, iB, iN, xB] >>>
+    # Step 1: Start with first phase of simplex
+    [istatus, iB, iN, xB] = simplex_init(A, b, c, irule=irule)
+
+    # Infeasibility
+    if istatus == 16:
+        istatus = 4
+        return [istatus, X, eta, iB, iN, xB]
+
+    # Failure to initialize
+    if istatus == 4:
+        istatus = 16
+        return [istatus, X, eta, iB, iN, xB]
+
+    # Step 2: Start Phase-2
+    Binv = inv(A[:, [i - 1 for i in iB]])
+    phase2_termination = {-1, 16}
+    while (istatus not in phase2_termination):
+        [istatus, iB, iN, xB, Binv] = simplex_step(A, b, c, iB, iN, xB, Binv, irule)
+
+    # This is unbounded case
+    if istatus == 16:
+        istatus = 32
+        return [istatus, X, eta, iB, iN, xB]
+
+    # This is optimal solution
+    else:
+        istatus = 0
+        X = np.zeros((6, 1), dtype=np.float64)
+        X[[(b1 - 1) for b1 in iB]] = xB
+        eta = (c * X)[0, 0]
 
     return [istatus, X, eta, iB, iN, xB]
 
