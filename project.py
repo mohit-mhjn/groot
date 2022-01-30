@@ -212,6 +212,8 @@ def simplex_init(A, b, c, irule=1):
         for some_var in artifical_vars_in_basis:
             if xB[iB.index(some_var), 0] != 0:
                 return [16, iB, iN, xB]
+        # Artificial variable in basis ends up with zero value, thus
+        return [4, iB, iN, xB]
 
 
 @protect_method
