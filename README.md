@@ -1,4 +1,4 @@
-![image](https://cdn.dribbble.com/users/4353062/screenshots/8179725/media/b823df3cf607d39fe77d44b0ecf56105.jpg?compress=1&resize=400x300)
+![image](https://cdn.dribbble.com/users/4353062/screenshots/8179725/media/b823df3cf607d39fe77d44b0ecf56105.jpg?compress=1&resize=200x150)
 
 ![image](https://img.shields.io/badge/Version-1.0-green)
 
